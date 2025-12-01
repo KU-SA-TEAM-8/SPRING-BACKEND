@@ -61,9 +61,9 @@ public class Score extends BaseEntity {
     this.observers.remove(observer);
   }
 
-  private void notifyObservers(int delta, String reason, String managerName) {
+  private void notifyObservers(int delta, String reason, UUID managerId) {
     for (ScoreObserver observer : observers) {
-      observer.onScoreUpdated(this, delta, reason, managerName);
+      observer.onScoreUpdated(this, delta, reason, managerId);
     }
   }
 
@@ -72,13 +72,13 @@ public class Score extends BaseEntity {
   /**
    * ScoreCommand.execute(score) 호출 시 실행될 메서드
    */
-  public void applyChange(int delta, String reason, String managerName) {
+  public void applyChange(int delta, String reason, UUID managerId) {
     // 정책 적용 (로직은 나중에 구현)
     // int newValue = policy.apply(value, delta);
     // this.value = newValue;
 
     // 히스토리 & 브로드캐스트 알림
-    notifyObservers(delta, reason, managerName);
+    notifyObservers(delta, reason, managerId);
 
     // TODO: 실제 점수 변경 로직
   }

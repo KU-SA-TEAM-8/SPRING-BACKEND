@@ -36,18 +36,9 @@ public class Manager extends BaseEntity {
     this.password = password;
   }
 
-  // 정적 팩토리 메서드 (도메인 생성 규칙)
+  // UC-1.1 회원가입
   public static Manager create(String name, String email, String encodedPassword) {
+    // validation 로직 추가
     return new Manager(name, email, encodedPassword);
-  }
-
-  // 비밀번호 인증 도메인 규칙
-  public boolean authenticate(String encodedPassword) {
-    return this.password.equals(encodedPassword);
-  }
-
-  public void updateProfile(String newName, String newEmail) {
-    this.name = newName;
-    this.email = newEmail;
   }
 }

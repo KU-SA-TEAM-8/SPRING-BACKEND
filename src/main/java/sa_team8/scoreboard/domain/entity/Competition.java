@@ -1,6 +1,8 @@
 package sa_team8.scoreboard.domain.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -10,6 +12,9 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,22 +33,19 @@ public class Competition extends BaseEntity {
   @GeneratedValue
   private UUID id;
 
-  @Column(nullable = false)
-  private String name;
-
-  @Column(nullable = false)
-  private String announcement;
-
-  @Column(nullable = false)
-  private String description;
+  @Embedded
+  private CompetitionMetaData metaData;
 
   // ScoreBoard와의 1:1 (읽기 전용)
-  @OneToOne(mappedBy = "competition")
+  @OneToOne(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true)
   private ScoreBoard scoreBoard;
 
   // ScoreManageBoard와의 1:1 (읽기 전용)
-  @OneToOne(mappedBy = "competition")
+  @OneToOne(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true)
   private ScoreManageBoard scoreManageBoard;
+
+  @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<Team> teams = new ArrayList<>();
 
   @Column(nullable = false)
   @Enumerated(EnumType.STRING)
@@ -52,38 +54,39 @@ public class Competition extends BaseEntity {
   @Transient
   private CompetitionState state; // 실제 동작 객체 (State 패턴)
 
-
-  private Competition(
-      String name,
-      String announcement,
-      String description
-  ) {
-    this.name = name;
-    this.announcement = announcement;
-    this.description = description;
-
-    // 초기 상태
-    this.state = new CompetitionWaitingState();
-    this.stateEnum = state.getStateEnum();
+  // UC-2.1
+  public static Competition create(UUID managerId, String name, String announcement,
+      LocalDateTime start, LocalDateTime end) {
+    return null;
   }
 
-  // ✨ 정적 팩토리 메서드
-  public static Competition create(
-      UUID managerId,
-      String name,
-      String announcement,
-      String description
-  ) {
-    return new Competition(managerId, name, announcement, description);
+  // UC-2.1
+  public void initializeBoards() {
+    this.scoreBoard = ScoreBoard.create(this);
+    this.scoreManageBoard = ScoreManageBoard.create(this);
   }
 
-  // 상태 변경 시 반영
-  private void changeState(CompetitionState newState) {
+  // UC-2.1, 2.6
+  public void addTeam(Team team) {
+    this.teams.add(team);
+  }
+
+  public void removeTeam(Team team) {
+    this.teams.remove(team);
+  }
+
+  // UC-2.2
+  public void updateScoreBoard(CompetitionMetaData metaData) {
+
+  }
+
+  // UC-2.4, 2.5
+  public void changeState(CompetitionState newState) {
     this.state = newState;
     this.stateEnum = newState.getStateEnum();
   }
 
-  // Domain Behavior (State 패턴 위임)
+  // UC-2.4, 2.5
   public void start() {
     this.state.start(this);
   }
@@ -98,10 +101,5 @@ public class Competition extends BaseEntity {
 
   public void close() {
     this.state.close(this);
-  }
-
-  // State 구현 클래스가 Competition 내부의 changeState를 사용해야 하므로 공개
-  public void setInternalState(CompetitionState newState) {
-    this.changeState(newState);
   }
 }
