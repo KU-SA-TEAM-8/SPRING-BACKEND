@@ -26,7 +26,7 @@ public class ScoreBoard extends BaseEntity {
   private Competition competition;
 
   @Column(nullable = false)
-  private String publicUrl;
+  private String publicId;
 
   @Column(nullable = false)
   private Boolean isPublic;

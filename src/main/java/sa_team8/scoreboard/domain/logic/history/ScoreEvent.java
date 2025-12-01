@@ -2,24 +2,33 @@ package sa_team8.scoreboard.domain.logic.history;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 import lombok.Getter;
+import sa_team8.scoreboard.domain.entity.Competition;
+import sa_team8.scoreboard.domain.entity.Manager;
+import sa_team8.scoreboard.domain.entity.Team;
 
 @Getter
 public abstract class ScoreEvent {
+
+  protected final Competition competition;
+  protected final Team team;
+  protected final Team againstTeam;
+  protected final Manager manager;
   protected final int delta;
   protected final String reason;
-  protected final UUID targetTeamId;   // 없으면 null
-  protected final String managerName;  // 없으면 null
 
-  public abstract ScoreHistoryType getType();
+  public abstract ScoreEventType getType();
+  public abstract void apply();
 
-  protected ScoreEvent(int delta, String reason, UUID targetTeamId, String managerName) {
+  public ScoreEvent(Competition competition, Team team, Team againstTeam, Manager manager, int delta, String reason) {
+    this.competition = competition;
+    this.team = team;
+    this.againstTeam = againstTeam;
     this.delta = delta;
     this.reason = reason;
-    this.targetTeamId = targetTeamId;
-    this.managerName = managerName;
+    this.manager = manager;
   }
+
 
   /**
    * DB에 JSON으로 저장할 payload를 key-value로 만든다.
@@ -27,12 +36,11 @@ public abstract class ScoreEvent {
    */
   public Map<String, Object> toPayload() {
     Map<String, Object> payload = new HashMap<>();
-    if (targetTeamId != null) {
-      payload.put("targetTeamId", targetTeamId.toString());
-    }
-    if (managerName != null) {
-      payload.put("managerName", managerName);
-    }
+    payload.put("competitionId", competition.getId());
+    payload.put("teamId", team.getId());
+    payload.put("managerId", manager.getId());
+    payload.put("delta", delta);
+    payload.put("reason", reason);
     return payload;
   }
 }
