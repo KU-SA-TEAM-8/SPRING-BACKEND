@@ -12,7 +12,11 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
+
+import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -54,16 +58,34 @@ public class Competition extends BaseEntity {
   @Transient
   private CompetitionState state; // 실제 동작 객체 (State 패턴)
 
+
   // UC-2.1
-  public static Competition create(UUID managerId, String name, String announcement,
-      LocalDateTime start, LocalDateTime end) {
-    return null;
+  public static Competition create(String name, String announcement, String description,
+      Instant startTime, Integer totalTime) {
+
+      CompetitionMetaData metaData = new CompetitionMetaData(name, announcement, description, startTime, totalTime);
+
+      Competition competition = new Competition();
+      competition.metaData = metaData;
+      competition.initializeBoards();
+      competition.stateEnum = CompetitionStateEnum.WAITING;
+      competition.state = new CompetitionWaitingState();
+
+      return competition;
   }
 
   // UC-2.1
   public void initializeBoards() {
     this.scoreBoard = ScoreBoard.create(this);
     this.scoreManageBoard = ScoreManageBoard.create(this);
+  }
+
+  // UC-2.2
+  public void updateScoreBoard(String name, String announcement, String description,
+      Instant startTime, Integer totalTime) {
+
+    CompetitionMetaData metaData = new CompetitionMetaData(name, announcement, description, startTime, totalTime);
+    this.metaData = metaData;
   }
 
   // UC-2.1, 2.6
@@ -73,11 +95,6 @@ public class Competition extends BaseEntity {
 
   public void removeTeam(Team team) {
     this.teams.remove(team);
-  }
-
-  // UC-2.2
-  public void updateScoreBoard(CompetitionMetaData metaData) {
-
   }
 
   // UC-2.4, 2.5
