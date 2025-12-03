@@ -35,30 +35,30 @@ public class CompetitionController {
 	// UC 2.2
 	@PatchMapping("/{id}")
 	public ResponseEntity<Void> updateCompetition(
-		@PathVariable UUID competitionId,
+		@PathVariable UUID id,
 		@RequestBody UpdateCompetitionRequest request
 	) {
-		competitionService.updateCompetition(competitionId, request);
+		competitionService.updateCompetition(id, request);
 		return (ResponseEntity<Void>)ResponseEntity.ok();
 	}
 
 	// UC 2.4
 	@PostMapping("/{id}/actions")
 	public ResponseEntity<Void> updateCompetitionAction(
-		@PathVariable UUID competitionId,
+		@PathVariable UUID id,
 		@RequestParam("mode") String actionMode
 	){
-		competitionService.updateCompetitoinAction(competitionId, actionMode);
+		competitionService.updateCompetitoinAction(id, actionMode);
 		return (ResponseEntity<Void>)ResponseEntity.ok();
 	}
 
 	// UC 2.5
 	@PostMapping("/{id}/restart")
 	public ResponseEntity<Void> restartCompetition(
-		@PathVariable UUID competitionId,
+		@PathVariable UUID id,
 		@RequestParam("mode") String mode
 	){
-		competitionService.restartCompetition(competitionId, mode);
+		competitionService.restartCompetition(id, mode);
 		return (ResponseEntity<Void>)ResponseEntity.ok();
 	}
 

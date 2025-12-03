@@ -13,7 +13,6 @@ import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import sa_team8.scoreboard.domain.logic.score.ScorePolicy;
 
 @Entity
 @Getter
@@ -34,4 +33,21 @@ public class Team extends BaseEntity {
 
   @OneToOne(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
   private Score score;
+
+  public Team(String name, Competition competition) {
+    this.name = name;
+    this.competition = competition;
+  }
+
+  public static Team create(String name, Competition competition){
+    Team team = new Team(name, competition);
+    Score score = Score.create(team, 0);
+    team.score = score;
+    return team;
+  }
+
+  public void update(String name){
+    this.name = name;
+  }
+
 }
