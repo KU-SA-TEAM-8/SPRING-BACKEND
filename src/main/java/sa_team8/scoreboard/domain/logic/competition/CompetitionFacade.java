@@ -19,8 +19,9 @@ public class CompetitionFacade {
   }
 
   // UC-2.2
-  public void updateCompetitionMeta(CompetitionMetaData newMeta) {
-    competition.updateScoreBoard(newMeta);
+  public void updateCompetitionMeta(String name, String announcement, String description,
+      Instant startTime, Integer totalTime) {
+    competition.updateScoreBoard(name, announcement, description, startTime, totalTime);
   }
 
   // UC-2.4
