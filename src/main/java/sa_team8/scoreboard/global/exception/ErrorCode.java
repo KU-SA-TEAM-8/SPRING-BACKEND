@@ -28,6 +28,7 @@ public enum ErrorCode {
   // 1000 Competition Error
   COMPETITION_NOT_FOUND(404, "1000", "대회를 찾을 수 없습니다."),
   COMPETITION_NOT_MANAGED(403, "1001", "해당 대회에 대한 관리 권한이 없습니다."),
+  INVALID_STATE_CHANGE(409,"1002", "대회 상태를 변경할 수 없는 요청입니다."),
 
   // 2000 Team Error
   TEAM_NOT_FOUND(404, "2000", "Team을 찾을 수 없습니다."),

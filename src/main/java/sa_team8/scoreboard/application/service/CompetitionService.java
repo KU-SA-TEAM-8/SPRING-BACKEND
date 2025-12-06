@@ -26,6 +26,7 @@ public class CompetitionService {
 	private final ManagerRepository managerRepository;
 	private final ManagerCompetitionRepository managerCompetitionRepository;
 
+	@Transactional
 	public void createCompetition(CreateCompetitionRequest request) {
 		String managerEmail = SecurityUtil.getCurrentUsername();
 		Manager manager = managerRepository.findByEmail(managerEmail)
