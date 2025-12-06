@@ -19,6 +19,7 @@ public class ScoreEventHistoryHandler {
         .eventType(event.getType())
         .delta(event.getDelta())
         .reason(event.getReason())
+        .competition(event.getCompetition())
         .targetTeam(event.getTeam())
         .againstTeam(event.getAgainstTeam())
         .manager(event.getManager())

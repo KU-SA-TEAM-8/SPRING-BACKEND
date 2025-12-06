@@ -29,7 +29,7 @@ public class CompetitionController {
 		@RequestBody CreateCompetitionRequest request
 	) {
 		competitionService.createCompetition(request);
-		return (ResponseEntity<Void>)ResponseEntity.ok();
+		return ResponseEntity.ok().build();
 	}
 
 	// UC 2.2
@@ -39,7 +39,7 @@ public class CompetitionController {
 		@RequestBody UpdateCompetitionRequest request
 	) {
 		competitionService.updateCompetition(id, request);
-		return (ResponseEntity<Void>)ResponseEntity.ok();
+		return ResponseEntity.ok().build();
 	}
 
 	// UC 2.4
@@ -49,7 +49,7 @@ public class CompetitionController {
 		@RequestParam("mode") String actionMode
 	){
 		competitionService.updateCompetitoinAction(id, actionMode);
-		return (ResponseEntity<Void>)ResponseEntity.ok();
+		return ResponseEntity.ok().build();
 	}
 
 	// UC 2.5
@@ -59,7 +59,7 @@ public class CompetitionController {
 		@RequestParam("mode") String mode
 	){
 		competitionService.restartCompetition(id, mode);
-		return (ResponseEntity<Void>)ResponseEntity.ok();
+		return ResponseEntity.ok().build();
 	}
 
 }

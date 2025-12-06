@@ -64,7 +64,7 @@ public class TeamService {
 
 	private Competition getAndValidateCompetition(UUID competitionId) {
 		String managerEmail = SecurityUtil.getCurrentUsername();
-		Manager manager = managerRepository.findByEmail(managerEmail)
+		Manager manager = managerRepository.findByEmailWithCompetitions(managerEmail)
 			.orElseThrow(() -> new ApplicationException(ErrorCode.MANAGER_NOT_FOUND));
 
 		Competition competition = competitionRepository.findById(competitionId)
