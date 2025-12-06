@@ -47,7 +47,7 @@ public class TeamController {
 
 	// UC 2.6
 	@DeleteMapping("/{id}/teams/{teamId}")
-	public ResponseEntity<Void> createTeam(
+	public ResponseEntity<Void> deleteTeam(
 		@PathVariable UUID id,
 		@PathVariable UUID teamId
 	) {

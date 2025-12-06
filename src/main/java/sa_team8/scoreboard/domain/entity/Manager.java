@@ -48,7 +48,6 @@ public class Manager extends BaseEntity implements UserDetails {
 
   // UC-1.1 회원가입
   public static Manager create(String name, String email, String encodedPassword) {
-    // validation 로직 추가
     return new Manager(name, email, encodedPassword);
   }
 
