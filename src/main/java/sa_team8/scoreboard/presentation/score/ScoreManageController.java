@@ -14,7 +14,7 @@ import sa_team8.scoreboard.presentation.score.req.ScoreChangeRequest;
 import sa_team8.scoreboard.presentation.score.res.ScoreManageBoardRes;
 
 @RestController
-@RequestMapping("/api/v1/competitions/{competitionId}/managers/{managerId}/boards")
+@RequestMapping("/api/v1/competitions/{competitionId}/managers/boards")
 @RequiredArgsConstructor
 public class ScoreManageController {
 
@@ -22,10 +22,10 @@ public class ScoreManageController {
 
   @GetMapping
   public ResponseEntity<ScoreManageBoardRes> getScoreManageBoard(
-      @PathVariable UUID competitionId,
-      @PathVariable UUID managerId
+      @PathVariable UUID competitionId
   ) {
-    return ResponseEntity.ok().build();
+    ScoreManageBoardRes response = scoreManageService.getScoreManageBoard(competitionId);
+    return ResponseEntity.ok(response);
   }
 
   /**
@@ -35,10 +35,9 @@ public class ScoreManageController {
   public ResponseEntity<Void> changeScore(
       @PathVariable UUID competitionId,
       @PathVariable UUID teamId,
-      @PathVariable UUID managerId,
       @RequestBody ScoreChangeRequest request
   ) {
-    scoreManageService.changeScore(competitionId, teamId, managerId, request);
+    scoreManageService.changeScore(competitionId, teamId, request);
     return ResponseEntity.ok().build();
   }
 }
