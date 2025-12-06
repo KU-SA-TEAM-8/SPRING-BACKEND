@@ -9,9 +9,11 @@ public enum ErrorCode {
   // 400 Bad Request
   INVALID_REQUEST(400, "C400", "잘못된 요청입니다."),
   INVALID_INPUT_VALUE(400, "C401", "입력값이 유효하지 않습니다."),
+  INVALID_REFRESHTOKEN(400, "C402", "유효하지 않은 Refresh Token 입니다."),
 
   // 401 Unauthorized
   UNAUTHORIZED(401, "A401", "인증이 필요합니다."),
+  LOGIN_FAILED(401, "A402", "아이디 또는 비밀번호가 일치하지 않습니다."),
 
   // 403 Forbidden
   FORBIDDEN(403, "A403", "접근 권한이 없습니다."),
