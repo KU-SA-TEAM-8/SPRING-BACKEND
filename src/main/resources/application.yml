@@ -11,6 +11,12 @@ spring:
       host: ${REDIS_HOST}
       port: ${REIDS_PORT}
       password: ${REDIS_PASSWORD}
+  jwt:
+    secret: ${JWT_SECRET_KEY}
+    access-token:
+      expire-time: 86400000 #1일
+    refresh-token:
+      expire-time: 259200000 #3일
 
   jpa:
     open-in-view: false
