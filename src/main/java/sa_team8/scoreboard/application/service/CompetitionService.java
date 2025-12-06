@@ -61,6 +61,9 @@ public class CompetitionService {
 			competition.start();
 		}
 		else if(actionMode.equals("stop")) {
+			competition.pause();
+		}
+		else if(actionMode.equals("close")){
 			competition.close();
 		}
 		else {
@@ -77,7 +80,6 @@ public class CompetitionService {
 			competition.resume();
 		}
 		else if(mode.equals("restart")) {
-			competition.close();
 			competition.start();
 		}
 		else {
