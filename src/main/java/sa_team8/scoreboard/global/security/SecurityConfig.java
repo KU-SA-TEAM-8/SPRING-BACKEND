@@ -26,7 +26,9 @@ public class SecurityConfig {
 
 	private static final String[] PERMIT_ALL_PATTERNS = {
 		"/auth/sign-up",
-		"/auth/sign-in"
+		"/auth/sign-in",
+		"/swagger-ui/**",
+		"/v3/api-docs/**"
 	};
 
 	@Bean
