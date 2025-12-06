@@ -1,6 +1,5 @@
 package sa_team8.scoreboard.application.service;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -14,7 +13,7 @@ import sa_team8.scoreboard.domain.entity.CompetitionMetaData;
 import sa_team8.scoreboard.domain.entity.ScoreBoard;
 import sa_team8.scoreboard.domain.entity.ScoreHistory;
 import sa_team8.scoreboard.domain.entity.Team;
-import sa_team8.scoreboard.domain.repository.CompetitionRepository;
+import sa_team8.scoreboard.domain.repository.ScoreBoardRepository;
 import sa_team8.scoreboard.domain.repository.ScoreHistoryRepository;
 import sa_team8.scoreboard.domain.repository.TeamRepository;
 import sa_team8.scoreboard.global.exception.ApplicationException;
@@ -65,12 +64,12 @@ public class ScoreBoardViewService {
         .orElseThrow(() -> new ApplicationException(ErrorCode.SCORE_BOARD_NOT_FOUND));
     Competition comp = scoreBoard.getCompetition();
 
-    List<ScoreHistory> histories = scoreHistoryRepo.findByCompetitionOrderByCreatedAtDesc(comp);
+    List<ScoreHistory> histories = scoreHistoryRepo.findWithTeamsByCompetitionOrderByCreatedAtDesc(comp);
 
     return histories.stream()
         .map(h -> new ScoreHistoryRes(
             h.getTargetTeam().getName(),
-            h.getAgainstTeam().getName(),
+            h.getAgainstTeam() != null ? h.getAgainstTeam().getName() : null, // againstTeam은 null일 수 있음
             h.getDelta(),
             h.getReason(),
             h.getCreatedAtToInstant()

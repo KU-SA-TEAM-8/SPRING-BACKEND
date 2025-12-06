@@ -31,7 +31,7 @@ public class TeamController {
 		@RequestBody CreateTeamRequest request
 	) {
 		teamService.createTeam(id, request);
-		return (ResponseEntity<Void>)ResponseEntity.ok();
+		return ResponseEntity.ok().build();
 	}
 
 	// UC 2.6
@@ -42,17 +42,17 @@ public class TeamController {
 		@RequestBody UpdateTeamRequest request
 	) {
 		teamService.updateTeam(id, teamId, request);
-		return (ResponseEntity<Void>)ResponseEntity.ok();
+		return ResponseEntity.ok().build();
 	}
 
 	// UC 2.6
 	@DeleteMapping("/{id}/teams/{teamId}")
-	public ResponseEntity<Void> createTeam(
+	public ResponseEntity<Void> deleteTeam(
 		@PathVariable UUID id,
 		@PathVariable UUID teamId
 	) {
 		teamService.deleteTeam(id, teamId);
-		return (ResponseEntity<Void>)ResponseEntity.ok();
+		return ResponseEntity.ok().build();
 	}
 
 }

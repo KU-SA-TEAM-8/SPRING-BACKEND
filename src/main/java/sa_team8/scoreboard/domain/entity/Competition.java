@@ -1,22 +1,8 @@
 package sa_team8.scoreboard.domain.entity;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
+import jakarta.persistence.*;
 
-import java.time.Duration;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -24,7 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sa_team8.scoreboard.domain.logic.competition.state.CompetitionState;
 import sa_team8.scoreboard.domain.logic.competition.state.CompetitionStateEnum;
-import sa_team8.scoreboard.domain.logic.competition.state.CompetitionWaitingState;
+import sa_team8.scoreboard.domain.logic.competition.state.CompetitionStateFactory;
 
 @Entity
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
@@ -58,6 +44,15 @@ public class Competition extends BaseEntity {
   @Transient
   private CompetitionState state; // 실제 동작 객체 (State 패턴)
 
+  @PostLoad
+  private void onLoad() {
+    setCompetitionState();
+  }
+
+  private void setCompetitionState() {
+    this.state = CompetitionStateFactory.from(this.stateEnum);
+  }
+
 
   // UC-2.1
   public static Competition create(String name, String announcement, String description,
@@ -69,7 +64,7 @@ public class Competition extends BaseEntity {
       competition.metaData = metaData;
       competition.initializeBoards();
       competition.stateEnum = CompetitionStateEnum.WAITING;
-      competition.state = new CompetitionWaitingState();
+      competition.setCompetitionState();
 
       return competition;
   }
