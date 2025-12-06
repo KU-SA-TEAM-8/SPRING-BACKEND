@@ -26,7 +26,8 @@ public enum ErrorCode {
   INTERNAL_SERVER_ERROR(500, "C500", "서버 내부 오류가 발생했습니다."),
 
   // 1000 Competition Error
-  COMPETITION_NOT_FOUND(404, "1000", "Competition 을 찾을 수 없습니다."),
+  COMPETITION_NOT_FOUND(404, "1000", "대회를 찾을 수 없습니다."),
+  COMPETITION_NOT_MANAGED(403, "1001", "해당 대회에 대한 관리 권한이 없습니다."),
 
   // 2000 Team Error
   TEAM_NOT_FOUND(404, "2000", "Team을 찾을 수 없습니다."),
