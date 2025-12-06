@@ -25,9 +25,8 @@ public class SecurityConfig {
 	private final JwtTokenProvider jwtTokenProvider;
 
 	private static final String[] PERMIT_ALL_PATTERNS = {
-		"/members/sign-up",
-		"/members/sign-in",
-		"/members/refresh"
+		"/auth/sign-up",
+		"/auth/sign-in"
 	};
 
 	@Bean
@@ -44,7 +43,6 @@ public class SecurityConfig {
 			authorize
 				.requestMatchers(PERMIT_ALL_PATTERNS).permitAll()
 				.requestMatchers(HttpMethod.DELETE, "/user").hasRole("ADMIN")
-				.requestMatchers("/members/role").hasRole("USER")
 				.anyRequest().authenticated()
 		);
 

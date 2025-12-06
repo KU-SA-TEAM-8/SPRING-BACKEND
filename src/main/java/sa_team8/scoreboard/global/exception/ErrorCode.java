@@ -18,6 +18,7 @@ public enum ErrorCode {
 
   // 409 Conflict
   ALREADY_EXISTS(409, "C409", "이미 존재하는 데이터입니다."),
+  USER_DUPLICATED(409, "C410", "이미 가입된 유저입니다."),
 
   // 500 Internal Server Error
   INTERNAL_SERVER_ERROR(500, "C500", "서버 내부 오류가 발생했습니다."),

@@ -38,10 +38,10 @@ public class JwtTokenProvider {
 
 	private static final String GRANT_TYPE = "Bearer";
 
-	@Value("${jwt.access-token.expire-time}")
+	@Value("${spring.jwt.access-token.expire-time}")
 	private long ACCESS_TOKEN_EXPIRE_TIME;
 
-	@Value("${jwt.refresh-token.expire-time}")
+	@Value("${spring.jwt.refresh-token.expire-time}")
 	private long REFRESH_TOKEN_EXPIRE_TIME;
 
 	public JwtTokenProvider(
