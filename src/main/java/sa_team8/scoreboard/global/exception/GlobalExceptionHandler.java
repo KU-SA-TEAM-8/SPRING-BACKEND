@@ -24,17 +24,4 @@ public class GlobalExceptionHandler {
         .body(ErrorResponse.of(errorCode, e.getMessage()));
   }
 
-  /**
-   * 기타 예상 못한 예외
-   */
-  @ExceptionHandler(Exception.class)
-  public ResponseEntity<ErrorResponse> handleException(Exception e) {
-
-    log.error("[Exception] {}", e.getMessage());
-    e.printStackTrace();
-
-    return ResponseEntity
-        .status(ErrorCode.INTERNAL_SERVER_ERROR.getStatus())
-        .body(ErrorResponse.of(ErrorCode.INTERNAL_SERVER_ERROR));
-  }
 }
