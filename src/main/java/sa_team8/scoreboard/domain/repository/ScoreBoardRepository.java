@@ -1,6 +1,5 @@
-package sa_team8.scoreboard.application.service;
+package sa_team8.scoreboard.domain.repository;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +16,7 @@ public interface ScoreBoardRepository extends JpaRepository<ScoreBoard, UUID> {
   @EntityGraph(attributePaths = {"competition"})
   Optional<ScoreBoard> findJoinCompetitionByPublicId(String publicId);
 
+  @EntityGraph(attributePaths = {"competition"})
   @Query("""
     SELECT sb FROM ScoreBoard sb
     WHERE sb.isPublic = true

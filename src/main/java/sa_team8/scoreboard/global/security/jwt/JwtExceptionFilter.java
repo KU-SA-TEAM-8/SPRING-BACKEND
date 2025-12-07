@@ -1,0 +1,31 @@
+package sa_team8.scoreboard.global.security.jwt;
+
+import java.io.IOException;
+
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
+import sa_team8.scoreboard.global.exception.ApplicationException;
+import sa_team8.scoreboard.global.exception.ErrorCode;
+
+@Slf4j
+public class JwtExceptionFilter extends OncePerRequestFilter {
+
+	@Override
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+		FilterChain filterChain) throws ServletException, IOException {
+		try {
+			filterChain.doFilter(request, response);
+		} catch (ApplicationException e) {
+			log.error("JWT Exception: {}", e.getErrorCode().getMessage());
+			throw new ApplicationException(e.getErrorCode());
+		} catch (Exception e) {
+			log.error("Filter Chain Error: {}", e.getMessage());
+			throw new ApplicationException(ErrorCode.INTERNAL_SERVER_ERROR);
+		}
+	}
+}

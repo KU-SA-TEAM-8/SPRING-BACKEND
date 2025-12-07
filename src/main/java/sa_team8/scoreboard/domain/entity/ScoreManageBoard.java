@@ -35,6 +35,10 @@ public class ScoreManageBoard extends BaseEntity {
   private LocalDateTime lastAccessedAt;
 
   public static ScoreManageBoard create(Competition competition) {
-    return new ScoreManageBoard();
+    ScoreManageBoard board = new ScoreManageBoard();
+    board.competition = competition;
+    board.publicId = UUID.randomUUID().toString();
+    board.lastAccessedAt = LocalDateTime.now();
+    return board;
   }
 }

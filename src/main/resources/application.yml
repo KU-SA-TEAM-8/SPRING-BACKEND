@@ -6,6 +6,17 @@ spring:
     username: ${MYSQL_USERNAME}
     password: ${MYSQL_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REIDS_PORT}
+      password: ${REDIS_PASSWORD}
+  jwt:
+    secret: ${JWT_SECRET_KEY}
+    access-token:
+      expire-time: 86400000
+    refresh-token:
+      expire-time: 259200000
 
   jpa:
     open-in-view: false
@@ -16,9 +27,12 @@ spring:
         format_sql: true
         default_batch_fetch_size: 100
 
+server:
+  url: ${SERVER_URL}
+
 ---
 spring:
   config:
     activate:
       on-profile: local
-    import: optional:application-local.yml```
+    import: optional:application-local.yml
