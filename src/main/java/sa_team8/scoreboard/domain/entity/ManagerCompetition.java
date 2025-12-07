@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name="manager_competiton")
+@Table(name="manager_competition")
 public class ManagerCompetition {
 
   @Id

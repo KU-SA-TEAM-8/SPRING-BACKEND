@@ -20,7 +20,7 @@ public class Competition extends BaseEntity {
 
   // Getter만 제공
   @Id
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;
 
   @Embedded
