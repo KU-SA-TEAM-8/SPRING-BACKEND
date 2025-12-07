@@ -1,5 +1,8 @@
 package sa_team8.scoreboard.presentation.competition.req;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.Nulls;
 import java.time.Instant;
 
 import lombok.AllArgsConstructor;
@@ -15,6 +18,8 @@ public class UpdateCompetitionRequest {
 	private String name;
 	private String announcement;
 	private String description;
+	@JsonSetter(nulls = Nulls.SKIP)
 	private Instant startTime;
+	@JsonSetter(nulls = Nulls.SKIP)
 	private Integer totalTime;
 }

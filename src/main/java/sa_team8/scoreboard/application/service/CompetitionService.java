@@ -15,8 +15,10 @@ import sa_team8.scoreboard.domain.repository.ManagerRepository;
 import sa_team8.scoreboard.global.exception.ApplicationException;
 import sa_team8.scoreboard.global.exception.ErrorCode;
 import sa_team8.scoreboard.global.security.SecurityUtil;
+import sa_team8.scoreboard.presentation.competition.req.CompetitionActionMode;
 import sa_team8.scoreboard.presentation.competition.req.CreateCompetitionRequest;
 import sa_team8.scoreboard.presentation.competition.req.UpdateCompetitionRequest;
+import sa_team8.scoreboard.presentation.competition.res.CreateCompetitionResponse;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +29,7 @@ public class CompetitionService {
 	private final ManagerCompetitionRepository managerCompetitionRepository;
 
 	@Transactional
-	public void createCompetition(CreateCompetitionRequest request) {
+	public CreateCompetitionResponse createCompetition(CreateCompetitionRequest request) {
 		String managerEmail = SecurityUtil.getCurrentUsername();
 		Manager manager = managerRepository.findByEmail(managerEmail)
 			.orElseThrow(() -> new ApplicationException(ErrorCode.MANAGER_NOT_FOUND));
@@ -43,6 +45,8 @@ public class CompetitionService {
 			.build();
 		managerCompetitionRepository.save(managerCompetition);
 		manager.addManagerCompetitions(managerCompetition);
+
+		return new CreateCompetitionResponse(competition.getId(), competition.getScoreBoard().getPublicId());
 	}
 
 	@Transactional
@@ -54,39 +58,20 @@ public class CompetitionService {
 	}
 
 	@Transactional
-	public void updateCompetitoinAction(UUID competitionId, String actionMode) {
+	public void updateCompetitionAction(UUID competitionId, CompetitionActionMode actionMode) {
 		Competition competition = getManagedCompetition(competitionId);
 
-		if(actionMode.equals("start")) {
-			competition.start();
+		switch (actionMode) {
+			case start -> competition.start();
+			case pause -> competition.pause();
+			case resume -> competition.resume();
+			case close -> competition.close();
+			default -> throw new ApplicationException(ErrorCode.INVALID_INPUT_VALUE);
 		}
-		else if(actionMode.equals("stop")) {
-			competition.pause();
-		}
-		else if(actionMode.equals("close")){
-			competition.close();
-		}
-		else {
-			throw new ApplicationException(ErrorCode.INVALID_INPUT_VALUE);
-		}
+
 		competitionRepository.save(competition);
 	}
 
-	@Transactional
-	public void restartCompetition(UUID competitionId, String mode) {
-		Competition competition = getManagedCompetition(competitionId);
-
-		if(mode.equals("resume")) {
-			competition.resume();
-		}
-		else if(mode.equals("restart")) {
-			competition.start();
-		}
-		else {
-			throw new ApplicationException(ErrorCode.INVALID_INPUT_VALUE);
-		}
-		competitionRepository.save(competition);
-	}
 
 	private Competition getManagedCompetition(UUID competitionId) {
 		String managerEmail = SecurityUtil.getCurrentUsername();

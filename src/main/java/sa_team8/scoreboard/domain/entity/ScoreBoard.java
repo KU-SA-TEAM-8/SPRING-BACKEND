@@ -41,7 +41,7 @@ public class ScoreBoard extends BaseEntity {
 
   public static ScoreBoard create(Competition competition) {
     ScoreBoard scoreBoard = new ScoreBoard(competition);
-    scoreBoard.publicId = UUID.randomUUID().toString();
+    scoreBoard.publicId = UUID.randomUUID().toString().substring(0, 13);
     scoreBoard.isPublic = false;
     scoreBoard.isExternal = false;
     return scoreBoard;

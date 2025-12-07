@@ -38,7 +38,7 @@ public class ScoreManageBoard extends BaseEntity {
   public static ScoreManageBoard create(Competition competition) {
     ScoreManageBoard board = new ScoreManageBoard();
     board.competition = competition;
-    board.publicId = UUID.randomUUID().toString();
+    board.publicId = UUID.randomUUID().toString().substring(0, 13);
     board.lastAccessedAt = LocalDateTime.now();
     return board;
   }

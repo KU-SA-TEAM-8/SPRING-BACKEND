@@ -59,7 +59,7 @@ public class Competition extends BaseEntity {
       Instant startTime, Integer totalTime) {
 
       CompetitionMetaData metaData = new CompetitionMetaData(name, announcement, description, startTime, totalTime);
-
+      //todo: metaData Validation
       Competition competition = new Competition();
       competition.metaData = metaData;
       competition.initializeBoards();
@@ -76,11 +76,31 @@ public class Competition extends BaseEntity {
   }
 
   // UC-2.2
-  public void updateScoreBoard(String name, String announcement, String description,
-      Instant startTime, Integer totalTime) {
+  public void updateScoreBoard(
+      String name,
+      String announcement,
+      String description,
+      Instant startTime,
+      Integer totalTime
+  ) {
 
-    CompetitionMetaData metaData = new CompetitionMetaData(name, announcement, description, startTime, totalTime);
-    this.metaData = metaData;
+    CompetitionMetaData current = this.metaData;
+
+    // null이면 기존 값 유지
+    String newName = (name != null) ? name : current.getName();
+    String newAnnouncement = (announcement != null) ? announcement : current.getAnnouncement();
+    String newDescription = (description != null) ? description : current.getDescription();
+    Instant newStartTime = (startTime != null) ? startTime : current.getStartTime();
+    Integer newTotalTime = (totalTime != null) ? totalTime : current.getTotalTime();
+
+    // 새 MetaData로 교체
+    this.metaData = new CompetitionMetaData(
+        newName,
+        newAnnouncement,
+        newDescription,
+        newStartTime,
+        newTotalTime
+    );
   }
 
   // UC-2.1, 2.6
