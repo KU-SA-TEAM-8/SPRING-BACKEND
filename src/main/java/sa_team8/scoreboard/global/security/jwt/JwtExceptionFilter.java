@@ -23,9 +23,6 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
 		} catch (ApplicationException e) {
 			log.error("JWT Exception: {}", e.getErrorCode().getMessage());
 			throw new ApplicationException(e.getErrorCode());
-		} catch (Exception e) {
-			log.error("Filter Chain Error: {}", e.getMessage());
-			throw new ApplicationException(ErrorCode.INTERNAL_SERVER_ERROR);
 		}
 	}
 }
