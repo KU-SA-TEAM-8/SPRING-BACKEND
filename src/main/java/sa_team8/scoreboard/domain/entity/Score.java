@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -31,6 +32,9 @@ public class Score extends BaseEntity {
   @JoinColumn(name = "team_id")
   private Team team;
 
+  @Column(nullable = true)
+  private LocalDateTime deletedAt;
+
   private Score(Team team, int initialValue ) {
     this.team = team;
     this.value = initialValue;
@@ -47,5 +51,9 @@ public class Score extends BaseEntity {
     // 정책 적용
     this.value = policy.apply(value, delta);
     return this.value;
+  }
+
+  public void softDelete() {
+    this.deletedAt = LocalDateTime.now();
   }
 }
