@@ -25,6 +25,7 @@ import sa_team8.scoreboard.presentation.competition.req.CompetitionActionMode;
 import sa_team8.scoreboard.presentation.competition.req.CreateCompetitionRequest;
 import sa_team8.scoreboard.presentation.competition.req.UpdateCompetitionRequest;
 import sa_team8.scoreboard.presentation.competition.res.CreateCompetitionResponse;
+import sa_team8.scoreboard.presentation.competition.res.GetCompetitionResponse;
 
 @Service
 @RequiredArgsConstructor
@@ -36,6 +37,18 @@ public class CompetitionService {
   private final TeamRepository teamRepository;
   private final ScoreBoardViewService scoreBoardViewService;
 
+  public GetCompetitionResponse getCompetition(UUID competitionId) {
+    String managerEmail = SecurityUtil.getCurrentUsername();
+
+    // 관리자 엔티티 조회
+    Manager manager = managerRepository.findByEmail(managerEmail)
+        .orElseThrow(() -> new ApplicationException(ErrorCode.MANAGER_NOT_FOUND));
+
+    Competition competition = competitionRepository.findById(competitionId)
+        .orElseThrow(() -> new ApplicationException(ErrorCode.COMPETITION_NOT_FOUND));
+
+    return GetCompetitionResponse.of(competition);
+  }
   /**
    * UC-2.1, 2.6: 대회 생성 및 팀 등록
    * - 현재 로그인한 Manager 인증

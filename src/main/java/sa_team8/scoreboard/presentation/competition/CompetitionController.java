@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +21,7 @@ import sa_team8.scoreboard.presentation.competition.req.CompetitionActionMode;
 import sa_team8.scoreboard.presentation.competition.req.CreateCompetitionRequest;
 import sa_team8.scoreboard.presentation.competition.req.UpdateCompetitionRequest;
 import sa_team8.scoreboard.presentation.competition.res.CreateCompetitionResponse;
+import sa_team8.scoreboard.presentation.competition.res.GetCompetitionResponse;
 
 @RestController
 @RequiredArgsConstructor
@@ -42,6 +44,17 @@ public class CompetitionController {
 		@RequestBody CreateCompetitionRequest request
 	) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(competitionService.createCompetition(request));
+	}
+
+	@Operation(
+			summary = "단일 대회 조회 (관리용)",
+			description = """
+            대회 정보를 조회합니다.
+            """
+	)
+	@GetMapping("/{id}")
+	public ResponseEntity<GetCompetitionResponse> getCompetition(@PathVariable UUID id) {
+		return ResponseEntity.ok(competitionService.getCompetition(id));
 	}
 
 	// UC 2.2, 2.6
