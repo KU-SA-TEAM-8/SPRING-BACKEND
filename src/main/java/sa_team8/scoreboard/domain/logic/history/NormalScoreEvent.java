@@ -14,9 +14,4 @@ public class NormalScoreEvent extends ScoreEvent {
   public ScoreEventType getType() {
     return ScoreEventType.NORMAL;
   }
-
-  @Override
-  public void apply() {
-
-  }
 }

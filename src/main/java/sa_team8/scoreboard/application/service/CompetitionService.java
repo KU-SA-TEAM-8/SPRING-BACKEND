@@ -7,11 +7,13 @@ import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import sa_team8.scoreboard.application.event.ScoreEventPublisher;
 import sa_team8.scoreboard.domain.command.UpdateTeamCommand;
 import sa_team8.scoreboard.domain.entity.Competition;
 import sa_team8.scoreboard.domain.entity.Manager;
 import sa_team8.scoreboard.domain.entity.ManagerCompetition;
 import sa_team8.scoreboard.domain.entity.Team;
+import sa_team8.scoreboard.domain.event.CompetitionDataChangeEvent;
 import sa_team8.scoreboard.domain.repository.CompetitionRepository;
 import sa_team8.scoreboard.domain.repository.ManagerCompetitionRepository;
 import sa_team8.scoreboard.domain.repository.ManagerRepository;
@@ -32,7 +34,7 @@ public class CompetitionService {
   private final ManagerRepository managerRepository;
   private final ManagerCompetitionRepository managerCompetitionRepository;
   private final TeamRepository teamRepository;
-  private final ScoreRepository scoreRepository;
+  private final ScoreBoardViewService scoreBoardViewService;
 
   /**
    * UC-2.1, 2.6: 대회 생성 및 팀 등록
@@ -117,6 +119,12 @@ public class CompetitionService {
         .toList();
 
     competition.updateTeams(commands);
+    
+    ///competition 조회, history 조회 후 브로드 캐스트
+    ScoreEventPublisher.publish(new CompetitionDataChangeEvent(
+        scoreBoardViewService.getPublicScoreBoard(competition.getScoreBoard().getPublicId()),
+        scoreBoardViewService.getHistory(competition.getScoreBoard().getPublicId())
+    ));
   }
 
 
