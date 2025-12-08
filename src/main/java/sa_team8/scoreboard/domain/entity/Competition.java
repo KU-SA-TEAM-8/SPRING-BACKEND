@@ -5,12 +5,17 @@ import jakarta.persistence.*;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import sa_team8.scoreboard.domain.command.UpdateTeamCommand;
 import sa_team8.scoreboard.domain.logic.competition.state.CompetitionState;
 import sa_team8.scoreboard.domain.logic.competition.state.CompetitionStateEnum;
 import sa_team8.scoreboard.domain.logic.competition.state.CompetitionStateFactory;
+import sa_team8.scoreboard.global.exception.ApplicationException;
+import sa_team8.scoreboard.global.exception.ErrorCode;
 
 @Entity
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
@@ -34,7 +39,7 @@ public class Competition extends BaseEntity {
   @OneToOne(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true)
   private ScoreManageBoard scoreManageBoard;
 
-  @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL)
   private List<Team> teams = new ArrayList<>();
 
   @Column(nullable = false)
@@ -56,13 +61,13 @@ public class Competition extends BaseEntity {
 
   // UC-2.1
   public static Competition create(String name, String announcement, String description,
-      Instant startTime, Integer totalTime) {
+      Instant startTime, Integer totalTime, Boolean isPublic, Boolean isExternal) {
 
       CompetitionMetaData metaData = new CompetitionMetaData(name, announcement, description, startTime, totalTime);
       //todo: metaData Validation
       Competition competition = new Competition();
       competition.metaData = metaData;
-      competition.initializeBoards();
+      competition.initializeBoards(isPublic, isExternal);
       competition.stateEnum = CompetitionStateEnum.WAITING;
       competition.setCompetitionState();
 
@@ -70,8 +75,8 @@ public class Competition extends BaseEntity {
   }
 
   // UC-2.1
-  public void initializeBoards() {
-    this.scoreBoard = ScoreBoard.create(this);
+  public void initializeBoards(Boolean isPublic, Boolean isExternal) {
+    this.scoreBoard = ScoreBoard.create(this, isPublic, isExternal);
     this.scoreManageBoard = ScoreManageBoard.create(this);
   }
 
@@ -102,6 +107,45 @@ public class Competition extends BaseEntity {
         newTotalTime
     );
   }
+
+  public void updateTeams(List<UpdateTeamCommand> commands) {
+
+    Map<UUID, Team> oldTeams = this.teams.stream()
+        .collect(Collectors.toMap(Team::getId, t -> t));
+
+    // ADD + UPDATE
+    for (UpdateTeamCommand cmd : commands) {
+
+      // 신규 추가
+      if (cmd.teamId() == null) {
+        Team newTeam = Team.create(cmd.name(), this, cmd.initialScore());
+        this.teams.add(newTeam);
+        continue;
+      }
+
+      // 기존 팀
+      Team existing = oldTeams.get(cmd.teamId());
+      if (existing == null){
+        throw new ApplicationException(ErrorCode.TEAM_NOT_FOUND);
+      }
+
+      // 이름 변경
+      if (!existing.getName().equals(cmd.name())) {
+        existing.update(cmd.name());
+      }
+
+      // 처리 완료된 팀 제거
+      oldTeams.remove(cmd.teamId());
+    }
+
+    // 남은 oldTeams → 삭제해야 할 팀
+    for (Team removed : oldTeams.values()) {
+      removed.getScore().softDelete();
+      removed.softDelete();
+      this.teams.remove(removed);
+    }
+  }
+
 
   // UC-2.1, 2.6
   public void addTeam(Team team) {
