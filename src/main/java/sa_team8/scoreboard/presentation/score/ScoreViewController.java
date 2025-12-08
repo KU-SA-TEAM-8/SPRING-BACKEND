@@ -36,9 +36,9 @@ public class ScoreViewController {
 
   @GetMapping("/list")
   public ResponseEntity<ScoreBoardListRes> list(
-      @RequestParam Integer size,
-      @RequestParam LocalDateTime cursorCreatedAt,
-      @RequestParam UUID cursorId
+      @RequestParam(defaultValue = "30") Integer size,
+      @RequestParam(required = false) LocalDateTime cursorCreatedAt,
+      @RequestParam(required = false) UUID cursorId
   ) {
     ScoreBoardListRes scoreBoardListRes = scoreBoardViewService.listPublicScoreboards(
         cursorCreatedAt, cursorId, size);
