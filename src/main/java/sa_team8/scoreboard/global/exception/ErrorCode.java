@@ -37,7 +37,8 @@ public enum ErrorCode {
   MANAGER_NOT_FOUND(404, "3000", "Manager 를 찾을 수 없습니다."),
 
   // 4000 Score Error
-  SCORE_BOARD_NOT_FOUND(404, "4000","ScoreBoard 를 찾을 수 없습니다." );
+  SCORE_BOARD_NOT_FOUND(404, "4000","ScoreBoard 를 찾을 수 없습니다." ),
+  SCORE_MANAGE_BOARD_NOT_FOUND(404, "4001", "ScoreManageBoard 를 찾을 수 없습니다.");
 
   private final int status;
   private final String code;
