@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import sa_team8.scoreboard.global.security.jwt.JwtAuthenticationFilter;
 import sa_team8.scoreboard.global.security.jwt.JwtExceptionFilter;
 import sa_team8.scoreboard.global.security.jwt.JwtTokenProvider;
@@ -32,6 +33,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class SecurityConfig {
 
 	private final JwtTokenProvider jwtTokenProvider;
+
+	@Value( "${server.url}")
+	private String SERVER_URL;
 
 	private static final String[] PERMIT_ALL_PATTERNS = {
 		"/auth/sign-up",
@@ -82,14 +86,7 @@ public class SecurityConfig {
 				"http://127.0.0.1:5173",
 				"http://localhost:3000",  // CRA, Next.js
 				"http://127.0.0.1:3000",
-				"http://localhost:8080",  // 프론트에서 프록시 활용 가능
-
-				// --- Swagger / Docs ---
-				"http://localhost:8080/swagger-ui.html",
-				"http://localhost:8080/swagger-ui/index.html",
-				"http://localhost:8080/api-docs",
-				"http://localhost:8080/v3/api-docs",
-				"http://localhost:8080/swagger-ui"
+				SERVER_URL
 		));
 
 		corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"));
