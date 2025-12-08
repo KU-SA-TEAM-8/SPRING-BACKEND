@@ -9,7 +9,7 @@ spring:
   data:
     redis:
       host: ${REDIS_HOST}
-      port: ${REIDS_PORT}
+      port: ${REDIS_PORT}
       password: ${REDIS_PASSWORD}
   jwt:
     secret: ${JWT_SECRET_KEY}
@@ -26,6 +26,17 @@ spring:
       hibernate:
         format_sql: true
         default_batch_fetch_size: 100
+
+  rabbitmq:
+    host: ${RABBITMQ_HOST}
+    port: ${RABBITMQ_PORT}
+    username: ${RABBITMQ_USERNAME}
+    password: ${RABBITMQ_PASSWORD}
+    listener:
+      simple:
+        acknowledge-mode: auto    # 자동 ack
+    template:
+      mandatory: true             # 메시지 미전달 시 callback 받기
 
 server:
   url: ${SERVER_URL}
