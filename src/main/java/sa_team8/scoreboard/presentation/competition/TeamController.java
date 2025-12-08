@@ -1,5 +1,6 @@
 package sa_team8.scoreboard.presentation.competition;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
@@ -13,10 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import sa_team8.scoreboard.application.service.TeamService;
-import sa_team8.scoreboard.presentation.competition.req.CreateCompetitionRequest;
 import sa_team8.scoreboard.presentation.competition.req.CreateTeamRequest;
 import sa_team8.scoreboard.presentation.competition.req.UpdateTeamRequest;
 
+@Hidden
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/competitions")
