@@ -76,9 +76,21 @@ public class SecurityConfig {
 		corsConfiguration.addAllowedHeader("*");
 		corsConfiguration.setAllowedMethods(Collections.singletonList("*"));
 		corsConfiguration.setAllowCredentials(true);
-		corsConfiguration.setAllowedOrigins(
-			List.of("http://localhost:5173")
-		);
+		corsConfiguration.setAllowedOrigins(List.of(
+				// --- Local Development ---
+				"http://localhost:5173",  // Vite/React
+				"http://127.0.0.1:5173",
+				"http://localhost:3000",  // CRA, Next.js
+				"http://127.0.0.1:3000",
+				"http://localhost:8080",  // 프론트에서 프록시 활용 가능
+
+				// --- Swagger / Docs ---
+				"http://localhost:8080/swagger-ui.html",
+				"http://localhost:8080/swagger-ui/index.html",
+				"http://localhost:8080/api-docs",
+				"http://localhost:8080/v3/api-docs",
+				"http://localhost:8080/swagger-ui"
+		));
 
 		corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"));
 
