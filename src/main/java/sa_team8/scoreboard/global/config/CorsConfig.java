@@ -15,8 +15,10 @@ public class CorsConfig {
 
         registry.addMapping("/**")
             .allowedOriginPatterns(
-                "http://localhost:*",
-                "http://127.0.0.1:*"
+                "http://localhost:5173",  // Vite/React
+                "http://127.0.0.1:5173",
+                "http://localhost:3000",  // CRA, Next.js
+                "http://127.0.0.1:3000"
             )
             .allowedMethods("*")
             .allowedHeaders("*")
