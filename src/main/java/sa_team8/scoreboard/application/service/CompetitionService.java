@@ -5,8 +5,8 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 import sa_team8.scoreboard.application.event.ScoreEventPublisher;
 import sa_team8.scoreboard.domain.command.UpdateTeamCommand;
 import sa_team8.scoreboard.domain.entity.Competition;
@@ -29,6 +29,7 @@ import sa_team8.scoreboard.presentation.competition.res.GetCompetitionResponse;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class CompetitionService {
 
   private final CompetitionRepository competitionRepository;
