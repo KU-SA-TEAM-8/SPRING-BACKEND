@@ -2,6 +2,7 @@ package sa_team8.scoreboard.presentation.competition.req;
 
 import java.time.Instant;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,4 +18,7 @@ public class CreateCompetitionRequest {
 	private String description;
 	private Instant startTime;
 	private Integer totalTime;
+	private Boolean isPublic;
+	private Boolean isExternal;
+	private List<CreateTeamRequest> team;
 }

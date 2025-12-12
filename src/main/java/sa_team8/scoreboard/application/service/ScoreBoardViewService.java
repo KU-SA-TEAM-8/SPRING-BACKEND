@@ -55,6 +55,7 @@ public class ScoreBoardViewService {
         metaData.getDescription(),
         metaData.getStartTime(),
         metaData.getTotalTime(),
+        comp.getStateEnum(),
         rows
     );
   }

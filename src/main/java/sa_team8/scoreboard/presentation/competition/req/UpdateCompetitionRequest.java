@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import java.time.Instant;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,4 +23,5 @@ public class UpdateCompetitionRequest {
 	private Instant startTime;
 	@JsonSetter(nulls = Nulls.SKIP)
 	private Integer totalTime;
+	private List<UpdateTeamRequest> teams;
 }

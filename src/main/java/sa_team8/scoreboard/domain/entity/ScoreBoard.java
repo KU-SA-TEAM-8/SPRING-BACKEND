@@ -39,11 +39,11 @@ public class ScoreBoard extends BaseEntity {
     this.competition = competition;
   }
 
-  public static ScoreBoard create(Competition competition) {
+  public static ScoreBoard create(Competition competition, Boolean isPublic, Boolean isExternal) {
     ScoreBoard scoreBoard = new ScoreBoard(competition);
     scoreBoard.publicId = UUID.randomUUID().toString().substring(0, 13);
-    scoreBoard.isPublic = false;
-    scoreBoard.isExternal = false;
+    scoreBoard.isPublic = isPublic;
+    scoreBoard.isExternal = isExternal;
     return scoreBoard;
   }
 }

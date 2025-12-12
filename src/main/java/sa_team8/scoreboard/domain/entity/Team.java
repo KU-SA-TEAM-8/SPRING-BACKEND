@@ -10,6 +10,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -35,20 +36,27 @@ public class Team extends BaseEntity {
   @OneToOne(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
   private Score score;
 
+  @Column(nullable = true)
+  private LocalDateTime deletedAt;
+
   public Team(String name, Competition competition) {
     this.name = name;
     this.competition = competition;
   }
 
-  public static Team create(String name, Competition competition){
+  public static Team create(String name, Competition competition, int initialScore){
     Team team = new Team(name, competition);
-    Score score = Score.create(team, 0);
-    team.score = score;
+    competition.addTeam(team);
+    team.score = Score.create(team, initialScore);
     return team;
   }
 
   public void update(String name){
     this.name = name;
+  }
+
+  public void softDelete() {
+    this.deletedAt = LocalDateTime.now();
   }
 
 }

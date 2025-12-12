@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.UUID;
 import sa_team8.scoreboard.domain.entity.CompetitionMetaData;
 import sa_team8.scoreboard.domain.entity.ScoreBoard;
+import sa_team8.scoreboard.domain.logic.competition.state.CompetitionStateEnum;
 
 public record ScoreBoardListRes(
     List<ScoreBoardRow> scoreBoardRows,
@@ -16,7 +17,8 @@ public record ScoreBoardListRes(
       String publicId,
       String name,
       Instant startTime,
-      Integer totalTime
+      Integer totalTime,
+      CompetitionStateEnum state
   ) {
     public static ScoreBoardRow from(ScoreBoard board) {
       CompetitionMetaData metaData = board.getCompetition().getMetaData();
@@ -24,7 +26,8 @@ public record ScoreBoardListRes(
           board.getPublicId(),
           metaData.getName(),
           metaData.getStartTime(),
-          metaData.getTotalTime()
+          metaData.getTotalTime(),
+          board.getCompetition().getStateEnum()
       );
     }
   }

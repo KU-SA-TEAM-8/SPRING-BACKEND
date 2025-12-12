@@ -29,7 +29,7 @@ public class TeamService {
 	@Transactional
 	public void createTeam(UUID competitionId, CreateTeamRequest request) {
 		Competition competition = getAndValidateCompetition(competitionId);
-		Team team = Team.create(request.getName(), competition);
+		Team team = Team.create(request.getName(), competition, request.getInitialScore());
 		competition.addTeam(team);
 		teamRepository.save(team);
 	}

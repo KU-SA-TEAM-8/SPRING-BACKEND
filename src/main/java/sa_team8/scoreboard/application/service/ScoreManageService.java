@@ -8,18 +8,24 @@ import org.springframework.transaction.annotation.Transactional;
 import sa_team8.scoreboard.application.event.ScoreEventPublisher;
 import sa_team8.scoreboard.domain.entity.Competition;
 import sa_team8.scoreboard.domain.entity.Manager;
+import sa_team8.scoreboard.domain.entity.ManagerCompetition;
 import sa_team8.scoreboard.domain.entity.Score;
+import sa_team8.scoreboard.domain.entity.ScoreManageBoard;
 import sa_team8.scoreboard.domain.entity.Team;
 
 
+import sa_team8.scoreboard.domain.event.ScoreUpdateEvent;
 import sa_team8.scoreboard.domain.logic.history.ScoreEvent;
 import sa_team8.scoreboard.domain.repository.CompetitionRepository;
+import sa_team8.scoreboard.domain.repository.ManagerCompetitionRepository;
 import sa_team8.scoreboard.domain.repository.ManagerRepository;
+import sa_team8.scoreboard.domain.repository.ScoreManageBoardRepository;
 import sa_team8.scoreboard.domain.repository.TeamRepository;
 import sa_team8.scoreboard.global.exception.ApplicationException;
 import sa_team8.scoreboard.global.exception.ErrorCode;
 import sa_team8.scoreboard.global.security.SecurityUtil;
 import sa_team8.scoreboard.presentation.score.req.ScoreChangeRequest;
+import sa_team8.scoreboard.presentation.score.res.ScoreManageBoardListRes;
 import sa_team8.scoreboard.presentation.score.res.ScoreManageBoardRes;
 import sa_team8.scoreboard.presentation.score.res.ScoreManageBoardRes.TeamScoreRow;
 
@@ -29,21 +35,30 @@ import sa_team8.scoreboard.presentation.score.res.ScoreManageBoardRes.TeamScoreR
 public class ScoreManageService {
 
   private final CompetitionRepository competitionRepo;
+  private final ScoreManageBoardRepository scoreManageBoardRepository;
+  private final ManagerCompetitionRepository managerCompetitionRepository;
   private final TeamRepository teamRepo;
   private final ManagerRepository managerRepo;
+  private final ScoreBoardViewService scoreBoardViewService;
 
   @Transactional
-  public ScoreManageBoardRes getScoreManageBoard(UUID competitionId) {
+  public ScoreManageBoardRes getScoreManageBoard(String manageBoardPublicId) {
     // 1. 매니저 로드 + 대회 로드 및 권한 검증
     String managerEmail = SecurityUtil.getCurrentUsername();
     Manager manager = managerRepo.findByEmailWithCompetitions(managerEmail)
         .orElseThrow(() -> new ApplicationException(ErrorCode.MANAGER_NOT_FOUND));
-
-    Competition competition = competitionRepo.findJoinTeamById(competitionId)
-        .orElseThrow(() -> new ApplicationException(ErrorCode.COMPETITION_NOT_FOUND));
+    
+    // 스코어 매니지 보드 및 경기 조회
+    ScoreManageBoard scoreManageBoard = scoreManageBoardRepository.findJoinCompetitionByPublicId(
+            manageBoardPublicId)
+        .orElseThrow(() -> new ApplicationException(ErrorCode.SCORE_MANAGE_BOARD_NOT_FOUND));
+    Competition competition = scoreManageBoard.getCompetition();
 
     if (!manager.isManagedCompetition(competition)) {
-      throw new ApplicationException(ErrorCode.COMPETITION_NOT_MANAGED);
+      // 관리자 ↔ 대회 관계 생성
+      ManagerCompetition managerCompetition = ManagerCompetition.createRelation(manager, competition);
+      // 관계 저장
+      managerCompetitionRepository.save(managerCompetition);
     }
 
     // 2. 대회에 속한 팀 로드 (Score까지 fetch join)
@@ -110,6 +125,21 @@ public class ScoreManageService {
     targetScore.applyChange(req.delta(), req.policyType().createPolicy());
 
     // 3) 이벤트 발행
-    ScoreEventPublisher.publish(event);
+    ScoreEventPublisher.publish(ScoreUpdateEvent.create(competition.getTeams(),
+        scoreBoardViewService.getHistory(competition.getScoreBoard().getPublicId())
+        ));
+  }
+
+  @Transactional
+  public List<ScoreManageBoardListRes> getManagedCompetitions() {
+    // 1. 현재 로그인한 매니저 조회 (Competitions fetch join 포함)
+    String managerEmail = SecurityUtil.getCurrentUsername();
+    Manager manager = managerRepo.findByEmailWithCompetitions(managerEmail)
+        .orElseThrow(() -> new ApplicationException(ErrorCode.MANAGER_NOT_FOUND));
+
+    // 2. 매니저가 관리 중인 대회 정보 반환
+    return manager.getManagerCompetitions().stream()
+        .map(mc -> ScoreManageBoardListRes.of(mc.getCompetition()))
+        .toList();
   }
 }

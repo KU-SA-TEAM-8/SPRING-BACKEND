@@ -51,7 +51,7 @@ public class ScoreHistory extends BaseEntity {
   private Team targetTeam;
 
   @ManyToOne
-  @JoinColumn(name = "against_team_id", nullable = false)
+  @JoinColumn(name = "against_team_id", nullable = true)
   private Team againstTeam;
 
   @ManyToOne
@@ -61,19 +61,4 @@ public class ScoreHistory extends BaseEntity {
   // DB는 JSON 컬럼 (MySQL: json, Postgres: jsonb 등)
   @Column(columnDefinition = "json")
   private String payloadJson;
-
-  // 도메인 이벤트 + 직렬화된 payload를 받아서 History 엔티티 생성
-  public static ScoreHistory fromEvent(UUID scoreId, ScoreEvent event, String payloadJson) {
-    return new ScoreHistory(
-        scoreId,
-        event.getType(),
-        event.getDelta(),
-        event.getReason(),
-        event.getCompetition(),
-        event.getTeam(),
-        event.getAgainstTeam(),
-        event.getManager(),
-        payloadJson
-    );
-  }
 }

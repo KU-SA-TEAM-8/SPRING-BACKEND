@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name="manager_competition")
+@Table(name = "manager_competition")
 public class ManagerCompetition {
 
   @Id
@@ -33,4 +33,16 @@ public class ManagerCompetition {
   @ManyToOne
   @JoinColumn(name = "competition_id", nullable = false)
   private Competition competition;
+
+  public static ManagerCompetition createRelation(Manager manager, Competition competition) {
+    ManagerCompetition create = ManagerCompetition.builder()
+        .manager(manager)
+        .competition(competition)
+        .build();
+
+    // 연관관계 관리
+    manager.addManagerCompetitions(create);
+
+    return create;
+  }
 }

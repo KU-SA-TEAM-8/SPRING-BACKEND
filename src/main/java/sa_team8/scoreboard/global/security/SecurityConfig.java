@@ -34,6 +34,9 @@ public class SecurityConfig {
 
 	private final JwtTokenProvider jwtTokenProvider;
 
+	@Value( "${server.url}")
+	private String SERVER_URL;
+
 	private static final String[] PERMIT_ALL_PATTERNS = {
 		"/auth/sign-up",
 		"/auth/sign-in",
@@ -55,7 +58,8 @@ public class SecurityConfig {
 			.logout(AbstractHttpConfigurer::disable)
 			.authorizeHttpRequests(authorize ->
 				authorize
-					.requestMatchers(PERMIT_ALL_PATTERNS).permitAll()
+						.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+						.requestMatchers(PERMIT_ALL_PATTERNS).permitAll()
 					.requestMatchers(HttpMethod.DELETE, "/user").hasRole("ADMIN")
 					.anyRequest().authenticated()
 			)
@@ -80,9 +84,15 @@ public class SecurityConfig {
 		corsConfiguration.addAllowedHeader("*");
 		corsConfiguration.setAllowedMethods(Collections.singletonList("*"));
 		corsConfiguration.setAllowCredentials(true);
-		corsConfiguration.setAllowedOrigins(
-			List.of("http://localhost:5173", FRONT_URL)
-		);
+		corsConfiguration.setAllowedOrigins(List.of(
+				// --- Local Development ---
+				"http://localhost:5173",  // Vite/React
+				"http://127.0.0.1:5173",
+				"http://localhost:3000",  // CRA, Next.js
+				"http://127.0.0.1:3000",
+				SERVER_URL,
+        FRONT_URL
+		));
 
 		corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"));
 

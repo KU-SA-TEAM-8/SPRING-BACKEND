@@ -1,4 +1,4 @@
-package sa_team8.scoreboard.presentation.competition.req;
+package sa_team8.scoreboard.presentation.competition.res;
 
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -10,8 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UpdateTeamRequest {
-	private UUID teamId;
-	private String name;
-	private int initialScore;
+public class GetTeamResponse {
+  private UUID teamId;
+  private String name;
 }
