@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import sa_team8.scoreboard.global.security.jwt.JwtAuthenticationFilter;
 import sa_team8.scoreboard.global.security.jwt.JwtExceptionFilter;
 import sa_team8.scoreboard.global.security.jwt.JwtTokenProvider;
@@ -40,6 +41,9 @@ public class SecurityConfig {
 		"/swagger-ui/**",
 		"/v3/api-docs/**"
 	};
+
+	@Value("${cors.url}")
+	private String FRONT_URL;
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity httpSecurity ) throws Exception {
@@ -77,7 +81,7 @@ public class SecurityConfig {
 		corsConfiguration.setAllowedMethods(Collections.singletonList("*"));
 		corsConfiguration.setAllowCredentials(true);
 		corsConfiguration.setAllowedOrigins(
-			List.of("http://localhost:5173")
+			List.of("http://localhost:5173", FRONT_URL)
 		);
 
 		corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"));
