@@ -125,9 +125,13 @@ public class ScoreManageService {
     targetScore.applyChange(req.delta(), req.policyType().createPolicy());
 
     // 3) 이벤트 발행
-    ScoreEventPublisher.publish(ScoreUpdateEvent.create(competition.getTeams(),
+    ScoreEventPublisher.publish(ScoreUpdateEvent.create(
+        competition.getTeams(),
         scoreBoardViewService.getHistory(competition.getScoreBoard().getPublicId())
-        ));
+        )
+    );
+
+    ScoreEventPublisher.publish(event);
   }
 
   @Transactional
