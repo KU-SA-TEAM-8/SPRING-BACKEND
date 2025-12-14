@@ -4,9 +4,11 @@ import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import sa_team8.scoreboard.domain.entity.Team;
 import sa_team8.scoreboard.presentation.score.res.ScoreHistoryRes;
 
+@Getter
 @Builder
 @AllArgsConstructor
 public class ScoreUpdateEvent extends BaseEvent {
