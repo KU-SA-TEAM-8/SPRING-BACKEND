@@ -136,6 +136,7 @@ public class CompetitionService {
     
     ///competition 조회, history 조회 후 브로드 캐스트
     ScoreEventPublisher.publish(new CompetitionDataChangeEvent(
+        competition.getScoreBoard().getPublicId(),
         scoreBoardViewService.getPublicScoreBoard(competition.getScoreBoard().getPublicId()),
         scoreBoardViewService.getHistory(competition.getScoreBoard().getPublicId())
     ));

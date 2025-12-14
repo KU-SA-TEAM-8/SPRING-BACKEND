@@ -12,6 +12,7 @@ import sa_team8.scoreboard.presentation.score.res.ScoreHistoryRes;
 @Builder
 @AllArgsConstructor
 public class ScoreUpdateEvent extends BaseEvent {
+  private String publicId;
   private List<ScoreUpdateEventTeamRowRes> teams;
   private List<ScoreHistoryRes> scoreHistories;
 
@@ -23,7 +24,7 @@ public class ScoreUpdateEvent extends BaseEvent {
 
   }
 
-  public static ScoreUpdateEvent create(List<Team> teams, List<ScoreHistoryRes> scoreHistoryRes) {
+  public static ScoreUpdateEvent create(String publicId, List<Team> teams, List<ScoreHistoryRes> scoreHistoryRes) {
 
     // 1) 팀 정보 매핑
     List<ScoreUpdateEventTeamRowRes> teamRows = teams.stream()
@@ -38,6 +39,7 @@ public class ScoreUpdateEvent extends BaseEvent {
 
     // 3) 이벤트 생성
     return ScoreUpdateEvent.builder()
+        .publicId(publicId)
         .teams(teamRows)
         .scoreHistories(scoreHistoryRes)
         .build();

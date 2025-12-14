@@ -11,6 +11,7 @@ import sa_team8.scoreboard.presentation.score.res.ScoreHistoryRes;
 @Builder
 @AllArgsConstructor
 public class CompetitionDataChangeEvent extends BaseEvent {
+  private String publicId;
   private ScoreBoardRes scoreBoard;
   private List<ScoreHistoryRes> scoreHistories;
 }

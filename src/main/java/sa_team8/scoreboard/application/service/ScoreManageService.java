@@ -126,6 +126,7 @@ public class ScoreManageService {
 
     // 3) 이벤트 발행
     ScoreEventPublisher.publish(ScoreUpdateEvent.create(
+        competition.getScoreBoard().getPublicId(),
         competition.getTeams(),
         scoreBoardViewService.getHistory(competition.getScoreBoard().getPublicId())
         )
