@@ -10,7 +10,7 @@ import sa_team8.scoreboard.domain.logic.history.ScoreEvent;
 
 @Component
 @RequiredArgsConstructor
-public class ScoreEventProducer {
+public class RabbitMQEventProducer {
 
   private final RabbitTemplate rabbitTemplate;
 
