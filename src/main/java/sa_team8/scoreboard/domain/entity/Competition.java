@@ -109,10 +109,8 @@ public class Competition extends BaseEntity {
   }
 
   public void updateTeams(List<UpdateTeamCommand> commands) {
-
     Map<UUID, Team> oldTeams = this.teams.stream()
         .collect(Collectors.toMap(Team::getId, t -> t));
-
     // ADD + UPDATE
     for (UpdateTeamCommand cmd : commands) {
 

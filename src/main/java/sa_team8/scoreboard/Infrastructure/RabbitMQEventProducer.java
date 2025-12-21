@@ -1,4 +1,4 @@
-package sa_team8.scoreboard.infrastructure;
+package sa_team8.scoreboard.Infrastructure;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
