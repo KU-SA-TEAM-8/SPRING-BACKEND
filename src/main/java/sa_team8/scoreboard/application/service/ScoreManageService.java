@@ -3,6 +3,7 @@ package sa_team8.scoreboard.application.service;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sa_team8.scoreboard.application.event.ScoreEventPublisher;
@@ -82,8 +83,9 @@ public class ScoreManageService {
     );
   }
 
+  @CacheEvict(value = "scoreBoard", key = "#publicId")
   @Transactional
-  public void changeScore(UUID competitionId, UUID teamId, ScoreChangeRequest req) {
+  public void changeScore(String publicId, UUID competitionId, UUID teamId, ScoreChangeRequest req) {
     // 1. 매니저 로드 + 대회 로드 및 권한 검증
     String managerEmail = SecurityUtil.getCurrentUsername();
     Manager manager = managerRepo.findByEmailWithCompetitions(managerEmail)

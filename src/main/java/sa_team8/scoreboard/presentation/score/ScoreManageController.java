@@ -40,7 +40,7 @@ public class ScoreManageController {
       @PathVariable UUID teamId,
       @RequestBody ScoreChangeRequest request
   ) {
-    scoreManageService.changeScore(competitionId, teamId, request);
+    scoreManageService.changeScore("", competitionId, teamId, request);
     return ResponseEntity.ok().build();
   }
 

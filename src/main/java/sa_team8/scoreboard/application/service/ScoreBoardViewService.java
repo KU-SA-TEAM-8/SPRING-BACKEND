@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,7 @@ public class ScoreBoardViewService {
   private final ScoreHistoryRepository scoreHistoryRepo;
   private final TeamRepository teamRepo;
 
+  @Cacheable(cacheNames = "scoreBoard", key = "#publicId")
   public ScoreBoardRes getPublicScoreBoard(String publicId) {
     ScoreBoard scoreBoard = scoreBoardRepo.findJoinCompetitionByPublicId(publicId)
         .orElseThrow(() -> new ApplicationException(ErrorCode.SCORE_BOARD_NOT_FOUND));
@@ -60,6 +62,7 @@ public class ScoreBoardViewService {
     );
   }
 
+  @Cacheable(cacheNames = "scoreHistory", key = "#publicId")
   public List<ScoreHistoryRes> getHistory(String publicId) {
     ScoreBoard scoreBoard = scoreBoardRepo.findJoinCompetitionByPublicId(publicId)
         .orElseThrow(() -> new ApplicationException(ErrorCode.SCORE_BOARD_NOT_FOUND));
