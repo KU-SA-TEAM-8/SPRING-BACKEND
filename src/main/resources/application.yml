@@ -46,6 +46,10 @@ springdoc:
     enabled: true
   swagger-ui:
     enabled: true
+
+cors:
+  url: ${FRONT_URL}
+
 ---
 spring:
   config:

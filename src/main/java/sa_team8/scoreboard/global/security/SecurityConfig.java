@@ -45,6 +45,9 @@ public class SecurityConfig {
 		"/v3/api-docs/**"
 	};
 
+	@Value("${cors.url}")
+	private String FRONT_URL;
+
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity httpSecurity ) throws Exception {
 		httpSecurity
@@ -87,7 +90,8 @@ public class SecurityConfig {
 				"http://127.0.0.1:5173",
 				"http://localhost:3000",  // CRA, Next.js
 				"http://127.0.0.1:3000",
-				SERVER_URL
+				SERVER_URL,
+        FRONT_URL
 		));
 
 		corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"));
